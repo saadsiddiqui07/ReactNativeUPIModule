@@ -36,6 +36,57 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: '#0000004D',
   },
+  modalContent: {
+    padding: 16,
+    gap: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'gray',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  cancelButton: {
+    width: '50%',
+    padding: 10,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'red',
+  },
+  confirmButton: {
+    backgroundColor: 'royalblue',
+    width: '50%',
+    padding: 10,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'royalblue',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF0000CC',
+  },
+  confirmButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  selectedUPIAppImage: {
+    width: 70,
+    height: 70,
+    borderRadius: 16,
+  },
 });
 
 export default styles;
