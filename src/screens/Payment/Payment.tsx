@@ -1,10 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, Text, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+  NativeModules,
+} from 'react-native';
 import {UPIApp} from '../../types/upi';
 import {getUPIApps} from '../../services/upiService';
 import {UPIAppItem} from '../../components/UPIAppsList/UPIAppItem';
 import styles from '../../styles/styles';
 import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
+import {AMOUNT, NOTE, UPI_ID} from './const';
+
+const {UPIAppsModule} = NativeModules;
 
 export const Payment = () => {
   const [upiApps, setUpiApps] = useState<UPIApp[]>([]);
@@ -24,6 +34,22 @@ export const Payment = () => {
     // Handle UPI app selection here
     setSelectedUPIApp(item);
     bottomSheetModalRef.current?.present();
+  };
+
+  const handlePaymentConfirmation = async () => {
+    if (selectedUPIApp) {
+      try {
+        await UPIAppsModule.initiateUPIPayment(
+          selectedUPIApp.packageName,
+          UPI_ID,
+          AMOUNT.toString(),
+          NOTE,
+        );
+        bottomSheetModalRef.current?.dismiss();
+      } catch (error) {
+        console.error('Payment initiation failed:', error);
+      }
+    }
   };
 
   return (
@@ -59,7 +85,7 @@ export const Payment = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.confirmButton}
-              onPress={() => bottomSheetModalRef.current?.dismiss()}>
+              onPress={handlePaymentConfirmation}>
               <Text style={styles.confirmButtonText}>Confirm</Text>
             </TouchableOpacity>
           </View>

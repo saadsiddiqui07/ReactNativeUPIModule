@@ -79,4 +79,32 @@ class UPIAppsModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
             promise.reject("ERROR", e.message ?: "Unknown error occurred", e)
         }
     }
+
+    @ReactMethod
+    fun initiateUPIPayment(packageName: String, upiId: String, amount: String, note: String, promise: Promise) {
+        try {
+            val paymentUri = Uri.parse("upi://pay").buildUpon()
+                .appendQueryParameter("pa", upiId) // payee address
+                .appendQueryParameter("pn", "Saad Siddiqui") // payee name
+                .appendQueryParameter("am", amount) // amount
+                .appendQueryParameter("cu", "INR") // currency
+                .appendQueryParameter("tn", if (note.isNotEmpty()) note else "Payment via React Native") // transaction note
+                .build()
+
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = paymentUri
+            intent.setPackage(packageName)
+
+            // Check if the app can handle this intent
+            if (intent.resolveActivity(reactApplicationContext.packageManager) != null) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                reactApplicationContext.startActivity(intent)
+                promise.resolve(true)
+            } else {
+                promise.reject("APP_NOT_FOUND", "Selected UPI app cannot handle the payment")
+            }
+        } catch (e: Exception) {
+            promise.reject("PAYMENT_ERROR", e.message ?: "Failed to initiate payment", e)
+        }
+    }
 } 
